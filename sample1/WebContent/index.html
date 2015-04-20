@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Aprendendo a Usar a API Google Maps </title>
+		<meta content="text/html; charset=ISO-8859-1" http-equiv="Content-Type"/>
+		<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=true&amp;key=ABQIAAAAAaVFxs6kNq7gWY59qf5XMxSec6s_uUscdbTyPSy8oWl8zYzqFRRanjFebOU60thMmEQQDEPx3A3y5Q" type="text/javascript"></script>
+		<script type="text/javascript">
+			var map = null;
+			var geocoder = null;
+			function inicializa() {
+				if (GBrowserIsCompatible()) {
+					map = new GMap2(document.getElementById("mapa_base"));
+					map.setCenter(new GLatLng(-22.9035393, -43.2095869), 13);
+					geocoder = new GClientGeocoder();
+  			    }
+			}
+			
+			function mostraEndereco(){
+				var endereco = document.getElementById("endereco").value;
+				if ( geocoder ) {
+					geocoder.getLatLng(endereco, 
+						function(point){ 
+							if ( !point ) {
+								alert(endereco + " não encontrado");
+							} else {
+								map.setCenter(point, 13);
+								var marca = new GMarker(point);
+								map.addOverlay(marca);
+								marca.openInfoWindowHtml( endereco + "<br />" + point.toString() );
+							}
+						} 
+					);
+				} else {
+					alert("GeoCoder não identificado");
+				}
+		}
+			
+    </script>
+    
+    
+	</head>
+	<body onload="inicializa()" onunload="GUnload()">
+		<form id="form_mapa" action="#" method="get">
+			<input type="text" name="endereco" id="endereco" size="50" value="São Paulo" /> 
+			<input type="button" name="enviar" id="enviar" value="Mostrar Latitude/Longitude" onclick="mostraEndereco()"/>
+		</form>
+		
+		<div id="mapa_base" style="width: 600px; height: 500px"></div>
+	</body>
+</html>
